@@ -5,4 +5,4 @@ Mapping wifi user to palo alto firewall
 
 ## Usage
 
-Edit `config.cfg` and run `./install`
+Edit `config.cfg` and run `bash ./install`
