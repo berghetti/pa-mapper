@@ -48,7 +48,7 @@ def get_omada_users():
 
     return users
 
-def do_user_mapping(pa):
+def do_user_mapping(pa):    
     while True:
         users = get_omada_users()
         users += get_unifi_users()
@@ -63,7 +63,7 @@ def do_user_mapping(pa):
         time.sleep(update_interval)
 
 def setup():
-    global CONFIG_FILE
+    global CONFIG_FILE, update_interval
     CONFIG_FILE = sys.argv[1]
 
     config = ConfigParser()
