@@ -1,7 +1,7 @@
 
 # pa-mapper
 
-Mapping wifi user to palo alto firewall
+Mapping wifi users to palo alto firewall
 
 ## Usage
 
