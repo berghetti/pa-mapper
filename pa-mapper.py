@@ -69,7 +69,7 @@ def setup():
     config = ConfigParser()
     config.read(CONFIG_FILE)
     update_interval = int(config['common']['update'])
-    LOG_CODES = {'DEBUG': 10, 'INFO': 20, 'WARNING': 30, 'ERROR', 40}
+    LOG_CODES = {'DEBUG': 10, 'INFO': 20, 'WARNING': 30, 'ERROR': 40}
     lvl = config['common']['log']
     debug = LOG_CODES[lvl]
 
