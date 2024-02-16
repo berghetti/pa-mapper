@@ -1,0 +1,11 @@
+[Unit]
+Description=PA Mapper: mapping wifi user to palo alto firewall
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=python3 /usr/local/pamapper/pa-mapper.py /etc/pa-mapper.cfg
+
+[Install]
+WantedBy=multi-user.target
+
