@@ -3,6 +3,8 @@ Description=PA Mapper: mapping wifi user to palo alto firewall
 After=network.target
 
 [Service]
+Restart=on-failure
+RestartSec=5s
 Type=simple
 ExecStart=python3 /usr/local/pamapper/pa-mapper.py /etc/pa-mapper.cfg
 
