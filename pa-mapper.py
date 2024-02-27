@@ -23,6 +23,8 @@ def get_unifi_users():
             continue
 
         user = client['1x_identity']
+        if '@' in user:
+            user = user[:-1]
         ip = client['ip']
         users.append({'user': user, 'ip': ip})
 
@@ -41,6 +43,8 @@ def get_omada_users():
             continue
 
         user = client['dot1xIdentity']
+        if '@' in user:
+            user = user[:-1]
         ip = client['ip']
         users.append({'user': user, 'ip': ip})
 
