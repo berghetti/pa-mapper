@@ -1,4 +1,3 @@
-
 import requests
 import re
 import logging
@@ -67,17 +66,13 @@ class Pa:
 
         url = f'https://{self.ip}/api/?type=user-id&key={self.key}'
 
-        command = f"<uid-message>\
-                         <version>1.0</version>\
-                         <type>update</type>\
-                         <payload><login>{self.entries}</login></payload>\
-                    </uid-message>"
+        command = f'<uid-message><version>1.0</version><type>update</type><payload><login>{self.entries}</login></payload></uid-message>'
 
         data = {'cmd': command}
         r = requests.post(url, data=data, verify=self.verify)
 
-        if r.status_code != 200:
-            self.log.error('Error to mapp users in pa')
+        if (r.status_code != 200):
+            self.log.error(f'Error to mapp users in PA\n{r.text}')
             return False
 
         self._clear_entries()
@@ -90,6 +85,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
