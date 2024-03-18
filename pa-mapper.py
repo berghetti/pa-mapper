@@ -12,6 +12,16 @@ from mods.pa import Pa
 CONFIG_FILE = None
 update_interval = 15
 
+def valid_user(user):
+    user = user.strip()
+
+    # Unifi has NULL char end string, remove this
+    user = user.rstrip('\x00')
+
+    if user == 'anonymous' or user == '': return False
+
+    return user
+
 def get_unifi_users():
     unifi = Unifi(config=CONFIG_FILE)
     unifi.login()
@@ -23,9 +33,12 @@ def get_unifi_users():
             continue
 
         user = client['1x_identity']
-        if '@' in user:
-            user = user[:-1]
-        ip = client['ip']
+        user = valid_user(user)
+        if user == False: continue
+
+        ip = client['ip'].strip()
+        if ip == '': continue
+
         users.append({'user': user, 'ip': ip})
 
     unifi.logout()
@@ -39,29 +52,36 @@ def get_omada_users():
     users = []
     for client in omada.getSiteClients():
         if client['wireless'] == False or \
-                'ip' not in client or client['dot1xIdentity'] == '':
+                'ip' not in client or 'dot1xIdentity' not in client:
             continue
 
         user = client['dot1xIdentity']
-        if '@' in user:
-            user = user[:-1]
-        ip = client['ip']
+        user = valid_user(user)
+        if user == False: continue
+
+        ip = client['ip'].strip()
+        if ip == '': continue
+
         users.append({'user': user, 'ip': ip})
 
     omada.logout()
 
     return users
 
-def do_user_mapping(pa):    
+def do_user_mapping(pa):
     while True:
-        users = get_omada_users()
+        users = []
+        users += get_omada_users()
         users += get_unifi_users()
 
         for user in users:
             pa.add_entry(user['user'], user['ip'])
 
         # send mapps to pa
-        if pa.mapp():
+        if len(users) > 0:
+            if pa.mapp() == False:
+                logging.error('Error map')
+
             logging.info(f'Updated {len(users)} users')
 
         time.sleep(update_interval)
@@ -84,13 +104,15 @@ def setup():
 def main():
     setup()
 
-    logging.debug('Starting pa-mapper')
-    
+    logging.info('Starting pa-mapper')
+
     pa = Pa(config=CONFIG_FILE)
     if pa.login() == False:
+        logging.error('Error PA Login')
         exit(1)
 
     do_user_mapping(pa)
+    logging.info('Stoping pa-mapper')
 
 if __name__ == '__main__':
     main()
